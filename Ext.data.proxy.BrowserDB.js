@@ -3,12 +3,12 @@
  *
  * BrowserDB Proxy for Ext JS 4 uses best available browser (local) database to use for your locally stored data
  * Currently available: IndexedDB and WebSQL DB
- * 
- * Version: 0.3
+ *
+ * Version: 0.4
  *
  */
 (function() {
-    
+
     var idb = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB,
         cfg = {};
 
@@ -19,8 +19,14 @@
         cfg.extend  = 'Ext.data.proxy.WebDB';
         cfg.dbInUse = 'webdb';
     } else {
-        cfg.extend  = 'Ext.data.proxy.IndexedDB';
-        cfg.dbInUse = 'idb';
+        try{
+            idb.setVersion();
+            cfg.extend  = 'Ext.data.proxy.IndexedDB';
+            cfg.dbInUse = 'idb';//gona be indexeddb
+        }catch (e){
+            cfg.extend  = 'Ext.data.proxy.IndexedDB2';
+            cfg.dbInUse = 'idb2';//gona be indexeddb
+        }
     }
 
     Ext.define('Ext.data.proxy.BrowserDB', {
@@ -38,7 +44,7 @@
          */
         constructor: function(config) {
             // make sure config options are synced
-            if (this.dbInUse !== 'idb') {
+            if (this.dbInUse !== 'idb' || this.dbInUse !== 'idb2' ) {
                 config.dbTable = config.dbTable || config.objectStoreName;
             } else {
                 config.objectStoreName = config.objectStoreName || config.dbTable;
