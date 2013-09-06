@@ -44,7 +44,7 @@
          */
         constructor: function(config) {
             // make sure config options are synced
-            if (this.dbInUse !== 'idb' || this.dbInUse !== 'idb2' ) {
+            if (this.dbInUse !== 'idb' && this.dbInUse !== 'idb2' ) {
                 config.dbTable = config.dbTable || config.objectStoreName;
             } else {
                 config.objectStoreName = config.objectStoreName || config.dbTable;
